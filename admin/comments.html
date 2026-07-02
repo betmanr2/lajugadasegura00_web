@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Comment moderation — LaJugadaSegura00</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  body{padding:40px 24px;}
+  .admin-wrap{max-width:900px; margin:0 auto;}
+  .token-box{border:1px solid var(--hairline); background:var(--bg-raised); padding:24px; margin-bottom:32px;}
+  .token-box input{width:100%; max-width:400px; background:var(--bg); border:1px solid var(--hairline); color:var(--cream); padding:10px 12px; font-family:'Inter',sans-serif; margin-right:10px;}
+  .token-box button, .action-btn{padding:9px 18px; font-size:13px; background:var(--gold); color:#0D0A08; font-weight:600; border:none; cursor:pointer;}
+  .action-btn.danger{background:transparent; border:1px solid #8C1620; color:#E27373;}
+  .slug-group{margin-bottom:36px;}
+  .slug-title{font-family:'Playfair Display',serif; font-size:18px; color:var(--gold-light); margin-bottom:14px; border-bottom:1px solid var(--hairline); padding-bottom:8px;}
+  .c-row{display:flex; justify-content:space-between; align-items:flex-start; gap:16px; border-bottom:1px solid var(--hairline); padding:14px 0;}
+  .c-row .meta{font-size:12px; color:var(--muted); margin-bottom:4px;}
+  .c-row .txt{font-size:14px; color:#D8CEBE; white-space:pre-wrap;}
+  .c-actions{display:flex; gap:8px; flex-shrink:0;}
+  .badge-pending{font-size:11px; background:#4a3a10; color:#E4C25A; padding:2px 8px; border-radius:2px; margin-left:8px;}
+  .badge-live{font-size:11px; background:#173404; color:#97C459; padding:2px 8px; border-radius:2px; margin-left:8px;}
+  .empty-msg{color:var(--muted); font-size:14px;}
+</style>
+</head>
+<body>
+
+<div class="admin-wrap">
+  <h1 style="margin-bottom:24px;">Comment moderation</h1>
+
+  <div class="token-box">
+    <input type="password" id="token" placeholder="Admin token">
+    <button onclick="loadAll()">Load comments</button>
+  </div>
+
+  <div id="content"></div>
+</div>
+
+<script>
+function getToken(){ return document.getElementById('token').value.trim(); }
+
+function esc(s){
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function loadAll(){
+  const token = getToken();
+  if(!token){ alert('Enter the admin token first'); return; }
+  sessionStorage.setItem('lgs_admin_token', token);
+  fetch('/api/admin/list', { headers: { 'authorization': 'Bearer ' + token } })
+    .then(r => r.json())
+    .then(data => {
+      if(!data.ok){ document.getElementById('content').innerHTML = '<p class="empty-msg">Unauthorized — check the token.</p>'; return; }
+      render(data.bySlug);
+    })
+    .catch(() => { document.getElementById('content').innerHTML = '<p class="empty-msg">Failed to load.</p>'; });
+}
+
+function render(bySlug){
+  const container = document.getElementById('content');
+  container.innerHTML = '';
+  const slugs = Object.keys(bySlug).sort();
+  if(!slugs.length){ container.innerHTML = '<p class="empty-msg">No comments yet.</p>'; return; }
+
+  slugs.forEach(slug => {
+    const comments = bySlug[slug].slice().sort((a,b) => b.ts - a.ts);
+    if(!comments.length) return;
+    const group = document.createElement('div');
+    group.className = 'slug-group';
+    const title = document.createElement('div');
+    title.className = 'slug-title';
+    title.textContent = slug + ' (' + comments.length + ')';
+    group.appendChild(title);
+
+    comments.forEach(c => {
+      const row = document.createElement('div');
+      row.className = 'c-row';
+      const date = new Date(c.ts).toLocaleString();
+      row.innerHTML = `
+        <div>
+          <div class="meta">${esc(c.name)} · ${date} ${c.approved ? '<span class="badge-live">live</span>' : '<span class="badge-pending">pending</span>'}</div>
+          <div class="txt">${esc(c.text)}</div>
+        </div>
+        <div class="c-actions">
+          ${!c.approved ? `<button class="action-btn" onclick="approve('${slug}','${c.id}')">Approve</button>` : ''}
+          <button class="action-btn danger" onclick="del('${slug}','${c.id}')">Delete</button>
+        </div>
+      `;
+      group.appendChild(row);
+    });
+    container.appendChild(group);
+  });
+}
+
+function approve(slug, id){
+  fetch('/api/admin/approve', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'authorization': 'Bearer ' + getToken() },
+    body: JSON.stringify({ slug, id })
+  }).then(() => loadAll());
+}
+
+function del(slug, id){
+  if(!confirm('Delete this comment?')) return;
+  fetch('/api/admin/delete', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'authorization': 'Bearer ' + getToken() },
+    body: JSON.stringify({ slug, id })
+  }).then(() => loadAll());
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = sessionStorage.getItem('lgs_admin_token');
+  if(saved){ document.getElementById('token').value = saved; loadAll(); }
+});
+</script>
+
+</body>
+</html>
