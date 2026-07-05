@@ -18,10 +18,12 @@ function unauthorized() {
   return json({ ok: false, error: "unauthorized" }, 401);
 }
 
-function isAuthorized(request, env) {
+async function isAuthorized(request, env) {
   const auth = request.headers.get("authorization") || "";
   const token = auth.replace(/^Bearer\s+/i, "");
-  return env.ADMIN_TOKEN && token === env.ADMIN_TOKEN;
+  if (!token || !env.ADMIN_TOKEN) return false;
+  const secret = await env.ADMIN_TOKEN.get();
+  return secret && token === secret;
 }
 
 function sanitizeSlug(slug) {
@@ -92,7 +94,7 @@ async function handleSubmit(request, env) {
 }
 
 async function handleAdminList(request, env) {
-  if (!isAuthorized(request, env)) return unauthorized();
+  if (!(await isAuthorized(request, env))) return unauthorized();
   const list = await env.COMMENTS_KV.list({ prefix: "comments:" });
   const result = {};
   for (const key of list.keys) {
@@ -108,7 +110,7 @@ async function handleAdminList(request, env) {
 }
 
 async function handleAdminAction(request, env, action) {
-  if (!isAuthorized(request, env)) return unauthorized();
+  if (!(await isAuthorized(request, env))) return unauthorized();
   let body;
   try {
     body = await request.json();
