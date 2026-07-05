@@ -8,5 +8,18 @@
   },
   "observability": {
     "enabled": true
-  }
+  },
+  "kv_namespaces": [
+    {
+      "binding": "COMMENTS_KV",
+      "id": "f52c25ee118d490689e5f46230a80afc"
+    }
+  ],
+  "secrets_store_secrets": [
+    {
+      "binding": "ADMIN_TOKEN",
+      "store_id": "385359c646664054aaa2fd750a12c868",
+      "secret_name": "lgs-admin-token"
+    }
+  ]
 }
