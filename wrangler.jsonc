@@ -21,5 +21,9 @@
       "store_id": "385359c646664054aaa2fd750a12c868",
       "secret_name": "lgs-admin-token"
     }
+  ],
+  "routes": [
+    { "pattern": "lajugadasegura00.com", "custom_domain": true },
+    { "pattern": "www.lajugadasegura00.com", "custom_domain": true }
   ]
 }
