@@ -1,5 +1,5 @@
 {
-  "name": "lajugadasegura00-web",
+  "name": "lajugadasegura00web",
   "compatibility_date": "2026-07-01",
   "main": "worker/index.js",
   "assets": {
