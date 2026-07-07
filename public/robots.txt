@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /offers/
+Disallow: /es/ofertas.html
+Disallow: /links/
+
+Sitemap: https://lajugadasegura00.com/sitemap.xml
