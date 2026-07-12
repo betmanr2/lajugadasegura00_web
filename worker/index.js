@@ -43,15 +43,11 @@ function isOffersPath(path) {
   );
 }
 
-// Detecta idioma preferido (es / en) para el aviso.
-function prefersSpanish(request) {
-  const al = (request.headers.get("accept-language") || "").toLowerCase();
-  return al.startsWith("es") || al.includes(",es") || al.includes(" es");
-}
-
 // Aviso mostrado cuando una región restringida intenta ver ofertas/afiliados.
-function geoNoticeResponse(request, country) {
-  const es = prefersSpanish(request);
+// El idioma se decide por la sección del sitio: inglés (principal) por
+// defecto, y español solo en las rutas /es/.
+function geoNoticeResponse(request, country, path) {
+  const es = typeof path === "string" && path.startsWith("/es/");
   const title = es
     ? "Contenido no disponible en tu región"
     : "Content not available in your region";
@@ -255,7 +251,7 @@ export default {
     // En regiones restringidas: bloquea ofertas/bonos y redirecciones de
     // afiliado (/go/...) mostrando un aviso legal.
     if (geoRestricted && (isOffersPath(path) || path.startsWith("/go/"))) {
-      return geoNoticeResponse(request, country);
+      return geoNoticeResponse(request, country, path);
     }
 
     if (path === "/api/comments" && request.method === "GET") {
