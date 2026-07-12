@@ -135,6 +135,50 @@ class TelegramFloat {
   }
 }
 
+// Inyecta un pop-up de verificación de edad (18+) al principio del <body>.
+// Se muestra una vez por visitante; la aceptación se recuerda en localStorage.
+class AgeGate {
+  constructor(es) {
+    this.es = es;
+  }
+  element(el) {
+    const es = this.es;
+    const title = es ? "¿Eres mayor de edad?" : "Are you of legal age?";
+    const body = es
+      ? "Esta web contiene información sobre juego y apuestas y está dirigida exclusivamente a personas adultas. Debes tener 18 años o más (o la edad legal en tu país) para entrar."
+      : "This website contains information about gambling and betting and is intended for adults only. You must be 18 or older (or the legal age in your country) to enter.";
+    const enter = es ? "Tengo 18 años o más — Entrar" : "I am 18 or older — Enter";
+    const leave = es ? "Salir" : "Leave";
+    const rg = es ? "Juega con responsabilidad." : "Please gamble responsibly.";
+    const g =
+      '<div id="lgs-agegate" style="position:fixed;inset:0;z-index:100000;' +
+      "background:rgba(5,4,3,.94);display:flex;align-items:center;justify-content:center;" +
+      'padding:24px;font-family:Inter,system-ui,-apple-system,sans-serif;">' +
+      '<div style="max-width:460px;text-align:center;background:#141009;' +
+      'border:1px solid rgba(201,162,39,.4);border-radius:14px;padding:34px 28px;">' +
+      '<div style="width:64px;height:64px;border-radius:50%;background:#C9A227;color:#1a1400;' +
+      "font-weight:700;font-size:20px;display:flex;align-items:center;justify-content:center;" +
+      'margin:0 auto 20px;">18+</div>' +
+      '<h2 style="font-family:Georgia,serif;color:#F3E9D2;font-size:22px;margin:0 0 12px;">' + title + "</h2>" +
+      '<p style="color:#8C8272;font-size:15px;line-height:1.6;margin:0 0 24px;">' + body + "</p>" +
+      '<div style="display:flex;flex-direction:column;gap:10px;">' +
+      '<button id="lgs-age-yes" style="background:#C9A227;color:#1a1400;border:none;' +
+      'font-weight:600;font-size:15px;padding:13px;border-radius:9px;cursor:pointer;">' + enter + "</button>" +
+      '<button id="lgs-age-no" style="background:transparent;color:#8C8272;' +
+      'border:1px solid #3a3833;font-size:14px;padding:11px;border-radius:9px;cursor:pointer;">' + leave + "</button>" +
+      "</div>" +
+      '<p style="color:#6b6357;font-size:12px;margin:20px 0 0;">' + rg + "</p>" +
+      "</div></div>" +
+      "<script>(function(){try{if(localStorage.getItem('lgs_age_ok')==='1'){" +
+      "var e=document.getElementById('lgs-agegate');if(e)e.remove();return;}}catch(x){}" +
+      "var y=document.getElementById('lgs-age-yes'),n=document.getElementById('lgs-age-no');" +
+      "if(y)y.onclick=function(){try{localStorage.setItem('lgs_age_ok','1')}catch(x){}" +
+      "var e=document.getElementById('lgs-agegate');if(e)e.remove();};" +
+      "if(n)n.onclick=function(){window.location.href='https://www.google.com';};})();<\/script>";
+    el.prepend(g, { html: true });
+  }
+}
+
 function badRequest(msg) {
   return json({ ok: false, error: msg }, 400);
 }
@@ -303,7 +347,10 @@ export default {
     if (contentType.includes("text/html")) {
       let rewriter = new HTMLRewriter();
       if (!path.startsWith("/admin")) {
-        rewriter = rewriter.on("body", new TelegramFloat(path.startsWith("/es/")));
+        const esLang = path.startsWith("/es/");
+        rewriter = rewriter
+          .on("body", new AgeGate(esLang))
+          .on("body", new TelegramFloat(esLang));
       }
       if (geoRestricted) {
         rewriter = rewriter.on("[data-geo-restricted]", new GeoStrip());
