@@ -10,13 +10,13 @@
     --green:#1F5A3E;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
-  html{overflow-x:hidden; width:100%;}
+  html{overflow-x:clip; width:100%;}
   body{
     background:var(--bg);
     color:var(--cream);
     font-family:'Inter',sans-serif;
     line-height:1.6;
-    overflow-x:hidden;
+    overflow-x:clip;
     width:100%;
   }
   .wrap{max-width:1180px; margin:0 auto; padding:0 32px;}
