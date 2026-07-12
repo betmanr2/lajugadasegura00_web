@@ -112,6 +112,29 @@ class GeoStrip {
   }
 }
 
+// Inyecta un botón flotante de Telegram al final del <body> de cada página.
+class TelegramFloat {
+  constructor(es) {
+    this.es = es;
+  }
+  element(el) {
+    const label = this.es ? "Únete a Telegram" : "Join Telegram";
+    const btn =
+      '<a href="https://t.me/lajugadasegura00" target="_blank" rel="noopener"' +
+      ' aria-label="Telegram"' +
+      ' style="position:fixed;bottom:20px;right:20px;z-index:9999;' +
+      "display:inline-flex;align-items:center;gap:8px;background:#229ED9;" +
+      "color:#fff;padding:12px 18px;border-radius:999px;" +
+      "font-family:Inter,system-ui,-apple-system,sans-serif;font-weight:600;" +
+      "font-size:15px;line-height:1;text-decoration:none;" +
+      'box-shadow:0 6px 20px rgba(0,0,0,.35);">' +
+      '<svg width="20" height="20" viewBox="0 0 24 24" fill="#fff" aria-hidden="true">' +
+      "<path d=\"M21.5 3.5 2.7 10.8c-1 .4-1 1.9.1 2.2l4.5 1.4 1.7 5.4c.3.9 1.4 1.1 2 .4l2.5-2.6 4.6 3.4c.9.6 2.1.1 2.3-.9l3-16.4c.2-1.1-.9-2-2-1.5zM8.7 14l8.6-6.9c.3-.2.6.2.3.4l-7.2 7.4-.3 3.4-1.4-4.3z\"/></svg>" +
+      "<span>" + label + "</span></a>";
+    el.append(btn, { html: true });
+  }
+}
+
 function badRequest(msg) {
   return json({ ok: false, error: msg }, 400);
 }
@@ -272,17 +295,20 @@ export default {
 
     // Everything else: serve the static site as usual
     const response = await env.ASSETS.fetch(request);
+    const contentType = response.headers.get("content-type") || "";
 
-    // En regiones restringidas, elimina del HTML los elementos marcados con
-    // [data-geo-restricted] (bonos, CTAs y enlaces de afiliado) sin ocultar
-    // el resto del contenido informativo.
-    if (
-      geoRestricted &&
-      (response.headers.get("content-type") || "").includes("text/html")
-    ) {
-      return new HTMLRewriter()
-        .on("[data-geo-restricted]", new GeoStrip())
-        .transform(response);
+    // Sobre las páginas HTML: inyecta el botón flotante de Telegram (excepto
+    // en /admin) y, en regiones restringidas, elimina los elementos marcados
+    // con [data-geo-restricted] (bonos, CTAs y enlaces de afiliado).
+    if (contentType.includes("text/html")) {
+      let rewriter = new HTMLRewriter();
+      if (!path.startsWith("/admin")) {
+        rewriter = rewriter.on("body", new TelegramFloat(path.startsWith("/es/")));
+      }
+      if (geoRestricted) {
+        rewriter = rewriter.on("[data-geo-restricted]", new GeoStrip());
+      }
+      return rewriter.transform(response);
     }
 
     return response;

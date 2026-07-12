@@ -173,3 +173,14 @@
   .comment-date{font-size:11px; color:var(--muted); font-weight:400; margin-left:8px;}
   .comment-text{font-size:14px; color:#D8CEBE; white-space:pre-wrap;}
   .comment-empty{font-size:13px; color:var(--muted); font-style:italic;}
+
+  /* ---------- community / redes sociales ---------- */
+  .community{padding:64px 0; border-top:1px solid var(--hairline); background:linear-gradient(180deg, rgba(201,162,39,.06), transparent);}
+  .community .section-head{text-align:center;}
+  .community-sub{color:var(--muted); max-width:540px; margin:12px auto 0; font-size:15px;}
+  .community-cta{display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-top:30px;}
+  .btn-social{display:inline-flex; align-items:center; gap:10px; padding:14px 26px; border-radius:10px; font-weight:600; font-size:16px; text-decoration:none; color:#fff; transition:transform .15s ease, box-shadow .15s ease;}
+  .btn-social svg{width:20px; height:20px;}
+  .btn-social:hover{transform:translateY(-2px); box-shadow:0 8px 22px rgba(0,0,0,.35);}
+  .btn-tg{background:#229ED9;}
+  .btn-ig{background:linear-gradient(45deg,#F58529,#DD2A7B,#8134AF);}
