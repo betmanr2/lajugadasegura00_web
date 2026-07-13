@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Biggest Slot Wins — Record Jackpots and Max Wins on Video | LaJugadaSegura00</title>
+<meta name="description" content="The biggest slot wins ever — record online jackpots and huge max wins on games like Gates of Olympus and Sweet Bonanza, with real clips of the winning spins.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../img/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="canonical" href="https://lajugadasegura00.com/wins/">
+<link rel="alternate" hreflang="en" href="https://lajugadasegura00.com/wins/">
+<link rel="alternate" hreflang="es" href="https://lajugadasegura00.com/es/premios/">
+<link rel="alternate" hreflang="x-default" href="https://lajugadasegura00.com/wins/">
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="../index.html">
+      <img src="../img/logo.png" alt="LaJugadaSegura00" style="width:38px;height:38px;border-radius:50%;">
+      <div class="brand-name">LA<b>JUGADASEGURA00</b></div>
+    </a>
+    <nav>
+      <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../slots/index.html">Free slots</a></li>
+        <li><a href="index.html">Big wins</a></li>
+        <li><a href="../blog/index.html">Blog</a></li>
+      </ul>
+    </nav>
+    <div class="nav-right">
+      <div class="lang-switch">
+        <a href="index.html" class="active">EN</a>
+        <a href="../es/premios/index.html">ES</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="section" style="padding-top:56px;">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">BIGGEST WINS</span>
+      <h2>Biggest slot wins</h2>
+      <p class="community-sub">Record online jackpots and the biggest max wins on popular slots — with the real winning spins on video. These are rare, exceptional results, not what you should expect. 18+.</p>
+    </div>
+    <div id="status" class="slots-status">Loading…</div>
+    <div id="grid" class="win-grid"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="brand-name" style="font-size:16px;">LA<b>JUGADASEGURA00</b></div>
+      <div class="social">
+        <a href="https://instagram.com/lajugadasegura00" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C9A227" stroke-width="1.8"><rect x="2.5" y="2.5" width="19" height="19" rx="5"/><circle cx="12" cy="12" r="4.3"/><circle cx="17.2" cy="6.8" r="1.1" fill="#C9A227" stroke="none"/></svg></a>
+        <a href="https://t.me/lajugadasegura00" aria-label="Telegram"><svg width="18" height="18" viewBox="0 0 24 24" fill="#C9A227"><path d="M21.5 3.5 2.7 10.8c-1 .4-1 1.9.1 2.2l4.5 1.4 1.7 5.4c.3.9 1.4 1.1 2 .4l2.5-2.6 4.6 3.4c.9.6 2.1.1 2.3-.9l3-16.4c.2-1.1-.9-2-2-1.5zM8.7 14l8.6-6.9c.3-.2.6.2.3.4l-7.2 7.4-.3 3.4-1.4-4.3z"/></svg></a>
+      </div>
+    </div>
+    <div class="badges">
+      <span>18+ only</span>
+      <span>Play safe</span>
+      <span>Results are exceptional and rare</span>
+    </div>
+    <div class="legal-links">
+      <a href="../legal/about.html">About</a>
+      <a href="../index.html#normativa">Responsible gambling</a>
+      <a href="../legal/privacy-policy.html">Privacy policy</a>
+      <a href="../legal/cookie-policy.html">Cookie policy</a>
+      <a href="../legal/affiliate-disclosure.html">Affiliate disclosure</a>
+      <a href="../legal/terms.html">Terms of use</a>
+      <a href="../legal/contact.html">Contact</a>
+    </div>
+    <p class="fine-print">Big wins shown here are exceptional, widely reported outcomes and are not representative of normal play. Slots are games of chance with a built-in house edge. 18+. Gambling involves financial risk — please play within your means.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var LANG='en';
+  var grid=document.getElementById('grid'), status=document.getElementById('status');
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function thumb(w){ return w.symbol ? 'https://common-static.ppgames.net/game_pic/square/200x200/'+w.symbol+'.png' : ''; }
+  function yt(w){ return 'https://www.youtube.com/results?search_query='+encodeURIComponent(w.query); }
+  var watch = LANG==='es' ? 'Ver el premiazo en YouTube ›' : 'Watch the win on YouTube ›';
+
+  fetch('wins.json',{cache:'no-cache'}).then(function(r){return r.json();}).then(function(d){
+    var wins=(d && d.wins)||[];
+    if(!wins.length){ status.textContent='No entries yet.'; return; }
+    status.style.display='none';
+    wins.forEach(function(w){
+      var note = LANG==='es' ? (w.note_es||w.note_en) : (w.note_en||w.note_es);
+      var t=thumb(w);
+      var card=document.createElement('div'); card.className='win-card';
+      card.innerHTML=
+        '<a class="win-media" href="'+esc(yt(w))+'" target="_blank" rel="noopener" aria-label="'+esc(watch)+'"'+(t?' style="background-image:url(\''+esc(t)+'\')"':'')+'>'+
+          '<span class="win-play">▶</span>'+
+        '</a>'+
+        '<div class="win-body">'+
+          '<div class="win-amount">'+esc(w.amount)+'</div>'+
+          '<div class="win-slot">'+esc(w.slot)+' · '+esc(w.provider)+(w.year?(' · '+esc(w.year)):'')+'</div>'+
+          '<p class="win-note">'+esc(note)+'</p>'+
+          '<a class="btn btn-ghost" style="padding:9px 16px;font-size:14px;" href="'+esc(yt(w))+'" target="_blank" rel="noopener">'+esc(watch)+'</a>'+
+        '</div>';
+      grid.appendChild(card);
+    });
+  }).catch(function(){ status.textContent='Could not load the wins.'; });
+})();
+</script>
+
+</body>
+</html>

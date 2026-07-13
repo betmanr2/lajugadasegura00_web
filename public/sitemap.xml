@@ -236,6 +236,24 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://lajugadasegura00.com/slots/"/>
   </url>
   <url>
+    <loc>https://lajugadasegura00.com/wins/</loc>
+    <lastmod>2026-07-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lajugadasegura00.com/wins/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://lajugadasegura00.com/es/premios/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lajugadasegura00.com/wins/"/>
+  </url>
+  <url>
+    <loc>https://lajugadasegura00.com/es/premios/</loc>
+    <lastmod>2026-07-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lajugadasegura00.com/wins/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://lajugadasegura00.com/es/premios/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lajugadasegura00.com/wins/"/>
+  </url>
+  <url>
     <loc>https://lajugadasegura00.com/legal/about.html</loc>
     <lastmod>2026-07-12</lastmod>
     <changefreq>monthly</changefreq>
