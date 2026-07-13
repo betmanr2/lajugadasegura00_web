@@ -244,3 +244,7 @@
   .win-amount{font-family:'Playfair Display',serif; font-size:26px; font-weight:700; color:var(--gold-light);}
   .win-slot{font-size:12px; color:var(--muted); margin:2px 0 10px;}
   .win-note{font-size:14px; color:#D8CEBE; margin-bottom:14px;}
+
+  /* ---------- enlaces internos ---------- */
+  .xlinks{color:var(--muted); font-size:14px; margin-top:28px; line-height:1.7;}
+  .xlinks a{color:var(--gold-light); text-decoration:underline;}
