@@ -195,6 +195,28 @@ class SlotsToken {
   }
 }
 
+// Sustituye el menú de navegación por uno unificado (mismas secciones en todas
+// las páginas), con rutas absolutas para que funcione a cualquier profundidad.
+class NavInject {
+  constructor(es) {
+    this.es = es;
+  }
+  element(el) {
+    const items = this.es
+      ? '<li><a href="/es/">Inicio</a></li>' +
+        '<li><a href="/es/slots/">Slots gratis</a></li>' +
+        '<li><a href="/es/premios/">Mayores premios</a></li>' +
+        '<li><a href="/es/blog/">Blog</a></li>' +
+        '<li><a href="/es/#normativa">Juego responsable</a></li>'
+      : '<li><a href="/">Home</a></li>' +
+        '<li><a href="/slots/">Free slots</a></li>' +
+        '<li><a href="/wins/">Big wins</a></li>' +
+        '<li><a href="/blog/">Blog</a></li>' +
+        '<li><a href="/#normativa">Responsible play</a></li>';
+    el.setInnerContent(items, { html: true });
+  }
+}
+
 function badRequest(msg) {
   return json({ ok: false, error: msg }, 400);
 }
@@ -365,6 +387,7 @@ export default {
       if (!path.startsWith("/admin")) {
         const esLang = path.startsWith("/es/");
         rewriter = rewriter
+          .on("header nav ul", new NavInject(esLang))
           .on("body", new AgeGate(esLang))
           .on("body", new TelegramFloat(esLang));
       }
