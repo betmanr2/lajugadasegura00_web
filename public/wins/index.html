@@ -92,21 +92,34 @@
     var wins=(d && d.wins)||[];
     if(!wins.length){ status.textContent='No entries yet.'; return; }
     status.style.display='none';
+    function ytThumb(id){ return 'https://i.ytimg.com/vi/'+id+'/hqdefault.jpg'; }
     wins.forEach(function(w){
       var note = LANG==='es' ? (w.note_es||w.note_en) : (w.note_en||w.note_es);
-      var t=thumb(w);
+      var bg = w.videoId ? ytThumb(w.videoId) : thumb(w);
+      var media = w.videoId
+        ? '<div class="win-media win-video" data-vid="'+esc(w.videoId)+'" role="button" tabindex="0" aria-label="'+esc(watch)+'"'+(bg?' style="background-image:url(\''+esc(bg)+'\')"':'')+'><span class="win-play">▶</span></div>'
+        : '<a class="win-media" href="'+esc(yt(w))+'" target="_blank" rel="noopener" aria-label="'+esc(watch)+'"'+(bg?' style="background-image:url(\''+esc(bg)+'\')"':'')+'><span class="win-play">▶</span></a>';
+      var linkHref = w.videoId ? 'https://www.youtube.com/watch?v='+encodeURIComponent(w.videoId) : yt(w);
       var card=document.createElement('div'); card.className='win-card';
-      card.innerHTML=
-        '<a class="win-media" href="'+esc(yt(w))+'" target="_blank" rel="noopener" aria-label="'+esc(watch)+'"'+(t?' style="background-image:url(\''+esc(t)+'\')"':'')+'>'+
-          '<span class="win-play">▶</span>'+
-        '</a>'+
+      card.innerHTML= media +
         '<div class="win-body">'+
           '<div class="win-amount">'+esc(w.amount)+'</div>'+
           '<div class="win-slot">'+esc(w.slot)+' · '+esc(w.provider)+(w.year?(' · '+esc(w.year)):'')+'</div>'+
           '<p class="win-note">'+esc(note)+'</p>'+
-          '<a class="btn btn-ghost" style="padding:9px 16px;font-size:14px;" href="'+esc(yt(w))+'" target="_blank" rel="noopener">'+esc(watch)+'</a>'+
+          '<a class="btn btn-ghost" style="padding:9px 16px;font-size:14px;" href="'+esc(linkHref)+'" target="_blank" rel="noopener">'+esc(watch)+'</a>'+
         '</div>';
       grid.appendChild(card);
+    });
+    grid.addEventListener('click', function(e){
+      var m=e.target.closest && e.target.closest('.win-video');
+      if(!m) return;
+      var id=m.getAttribute('data-vid');
+      var f=document.createElement('iframe');
+      f.setAttribute('allow','autoplay; encrypted-media; fullscreen');
+      f.setAttribute('allowfullscreen','');
+      f.style.cssText='position:absolute;inset:0;width:100%;height:100%;border:0;z-index:2;';
+      f.src='https://www.youtube.com/embed/'+encodeURIComponent(id)+'?autoplay=1&rel=0';
+      m.innerHTML=''; m.appendChild(f); m.className='win-media';
     });
   }).catch(function(){ status.textContent='Could not load the wins.'; });
 })();
