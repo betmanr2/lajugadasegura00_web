@@ -117,7 +117,7 @@
   function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
   function providerOf(g){ return g.provider || (g.symbol ? 'Pragmatic Play' : ''); }
-  function thumbOf(g){ return g.thumb || (g.symbol ? 'https://common-static.ppgames.net/game_pic/square/200x200/'+g.symbol+'.png' : ''); }
+  function thumbOf(g){ return g.thumb || (g.symbol ? '../../img/slots/'+g.symbol+'.svg' : ''); }
   function demoOf(g){
     if(g.demoUrl) return g.demoUrl;
     if(g.symbol) return 'https://demogamesfree.pragmaticplay.net/gs2c/openGame.do?gameSymbol='+encodeURIComponent(g.symbol)+'&websiteUrl=https%3A%2F%2Fdemogamesfree.pragmaticplay.net&jurisdiction=99&lobby_url=&lang=es&cur=EUR';
