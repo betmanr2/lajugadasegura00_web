@@ -31,6 +31,12 @@ const GEO_RESTRICTED_COUNTRIES = new Set([
   // Añade aquí cualquier otro país que quieras excluir, p. ej. "IN".
 ]);
 
+// Enlaces de afiliado con URL limpia: /go/<clave> redirige a la URL real.
+// Añade aquí cada programa cuando tengas su enlace (p. ej. N1, Royal…).
+const GO_LINKS = {
+  slotslaunch: "https://slotslaunch.com?ref=rGHUb7kI",
+};
+
 // Rutas de la sección de ofertas/bonos que se bloquean por completo.
 function isOffersPath(path) {
   return (
@@ -394,6 +400,14 @@ export default {
     // afiliado (/go/...) mostrando un aviso legal.
     if (geoRestricted && (isOffersPath(path) || path.startsWith("/go/"))) {
       return geoNoticeResponse(request, country, path);
+    }
+
+    // Redirección de enlaces de afiliado con URL limpia (/go/<clave>).
+    if (path.startsWith("/go/")) {
+      const key = path.slice(4).replace(/\/+$/, "").toLowerCase();
+      const dest = GO_LINKS[key];
+      if (dest) return Response.redirect(dest, 302);
+      return new Response("Link not found", { status: 404 });
     }
 
     if (path === "/api/comments" && request.method === "GET") {
