@@ -217,6 +217,22 @@ class NavInject {
   }
 }
 
+// Inyecta un botón hamburguesa y el script para abrir/cerrar el menú en móvil.
+class MobileMenu {
+  element(el) {
+    el.append(
+      '<button class="nav-toggle" aria-label="Menu" aria-expanded="false">☰</button>' +
+      "<script>(function(){var b=document.querySelector('.nav-toggle')," +
+      "n=document.querySelector('header nav');if(b&&n){" +
+      "b.addEventListener('click',function(){var o=n.classList.toggle('open');" +
+      "b.setAttribute('aria-expanded',o?'true':'false');});" +
+      "n.addEventListener('click',function(e){if(e.target.tagName==='A'){" +
+      "n.classList.remove('open');b.setAttribute('aria-expanded','false');}});}})();</" + "script>",
+      { html: true }
+    );
+  }
+}
+
 function badRequest(msg) {
   return json({ ok: false, error: msg }, 400);
 }
@@ -388,6 +404,7 @@ export default {
         const esLang = path.startsWith("/es/");
         rewriter = rewriter
           .on("header nav ul", new NavInject(esLang))
+          .on("header .nav", new MobileMenu())
           .on("body", new AgeGate(esLang))
           .on("body", new TelegramFloat(esLang));
       }
