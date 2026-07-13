@@ -1,0 +1,14 @@
+{"provider":"pragmatic","updated":"2026-07-13","note":"Free Pragmatic Play public demos. To switch to a paid aggregator (Slotslaunch), regenerate this file with the sync script.","games":[
+{"symbol":"vs20olympgate","name":"Gates of Olympus","rtp":96.5,"volatility":"high"},
+{"symbol":"vs20fruitsw","name":"Sweet Bonanza","rtp":96.5,"volatility":"high"},
+{"symbol":"vs10bbbonanza","name":"Big Bass Bonanza","rtp":96.7,"volatility":"medium"},
+{"symbol":"vs20doghouse","name":"The Dog House","rtp":96.5,"volatility":"high"},
+{"symbol":"vs25wolfgold","name":"Wolf Gold","rtp":96.0,"volatility":"medium"},
+{"symbol":"vs20sugarrush","name":"Sugar Rush","rtp":96.5,"volatility":"high"},
+{"symbol":"vs20starlight","name":"Starlight Princess","rtp":96.5,"volatility":"high"},
+{"symbol":"vs20fparty","name":"Fruit Party","rtp":96.5,"volatility":"high"},
+{"symbol":"vs40wildwest","name":"Wild West Gold","rtp":96.5,"volatility":"high"},
+{"symbol":"vs4096bufking","name":"Buffalo King","rtp":96.0,"volatility":"high"},
+{"symbol":"vs10madame","name":"Madame Destiny","rtp":96.5,"volatility":"high"},
+{"symbol":"vs20midas","name":"The Hand of Midas","rtp":96.5,"volatility":"high"}
+]}

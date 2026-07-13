@@ -179,6 +179,22 @@ class AgeGate {
   }
 }
 
+// Inyecta el token de Slotslaunch (desde el secret del Worker) solo en las
+// páginas de /slots, para que el iframe del demo pueda cargar sin exponer el
+// token en el repositorio. El token queda visible en el HTML servido, pero
+// Slotslaunch lo restringe por dominio.
+class SlotsToken {
+  constructor(token) {
+    this.token = token;
+  }
+  element(el) {
+    el.append(
+      "<script>window.SLOTS_TOKEN=" + JSON.stringify(this.token) + ";</" + "script>",
+      { html: true }
+    );
+  }
+}
+
 function badRequest(msg) {
   return json({ ok: false, error: msg }, 400);
 }
@@ -351,6 +367,9 @@ export default {
         rewriter = rewriter
           .on("body", new AgeGate(esLang))
           .on("body", new TelegramFloat(esLang));
+      }
+      if (path.startsWith("/slots") && env.SLOTSLAUNCH_TOKEN) {
+        rewriter = rewriter.on("head", new SlotsToken(env.SLOTSLAUNCH_TOKEN));
       }
       if (geoRestricted) {
         rewriter = rewriter.on("[data-geo-restricted]", new GeoStrip());
