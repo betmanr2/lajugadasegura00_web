@@ -130,6 +130,8 @@
 
   .blog-list-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px;}
   .blog-list-grid .post-card{flex-direction:column;}
+  .blog-list-grid .post-body{display:flex; flex-direction:column; flex:1;}
+  .blog-list-grid .read-more{margin-top:auto;}
 
   @media (max-width:860px){
     nav ul{display:none;}
