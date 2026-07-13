@@ -217,19 +217,40 @@ class NavInject {
   }
 }
 
-// Inyecta un botón hamburguesa y el script para abrir/cerrar el menú en móvil.
+// Inyecta el botón hamburguesa en la cabecera (solo visible en móvil).
 class MobileMenu {
   element(el) {
     el.append(
-      '<button class="nav-toggle" aria-label="Menu" aria-expanded="false">☰</button>' +
-      "<script>(function(){var b=document.querySelector('.nav-toggle')," +
-      "n=document.querySelector('header nav');if(b&&n){" +
-      "b.addEventListener('click',function(){var o=n.classList.toggle('open');" +
-      "b.setAttribute('aria-expanded',o?'true':'false');});" +
-      "n.addEventListener('click',function(e){if(e.target.tagName==='A'){" +
-      "n.classList.remove('open');b.setAttribute('aria-expanded','false');}});}})();</" + "script>",
+      '<button class="nav-toggle" aria-label="Menu" aria-controls="lgs-drawer" aria-expanded="false">☰</button>',
       { html: true }
     );
+  }
+}
+
+// Panel lateral (drawer) con el menú completo, inyectado en el body. La
+// hamburguesa lo abre; el fondo oscuro, la X o pulsar un enlace lo cierra.
+class MobileDrawer {
+  constructor(es) {
+    this.es = es;
+  }
+  element(el) {
+    const items = this.es
+      ? '<a href="/es/">Inicio</a><a href="/es/slots/">Slots gratis</a><a href="/es/premios/">Mayores premios</a><a href="/es/blog/">Blog</a><a href="/es/#normativa">Juego responsable</a>'
+      : '<a href="/">Home</a><a href="/slots/">Free slots</a><a href="/wins/">Big wins</a><a href="/blog/">Blog</a><a href="/#normativa">Responsible play</a>';
+    const close = this.es ? "Cerrar" : "Close";
+    const html =
+      '<div id="lgs-drawer-overlay" class="lgs-drawer-overlay"></div>' +
+      '<aside id="lgs-drawer" class="lgs-drawer" aria-hidden="true">' +
+      '<button class="lgs-drawer-close" aria-label="' + close + '">✕</button>' +
+      '<nav class="lgs-drawer-nav">' + items + "</nav></aside>" +
+      "<script>(function(){var t=document.querySelector('.nav-toggle')," +
+      "d=document.getElementById('lgs-drawer'),o=document.getElementById('lgs-drawer-overlay')," +
+      "c=d?d.querySelector('.lgs-drawer-close'):null;" +
+      "function op(){d.classList.add('open');o.classList.add('open');d.setAttribute('aria-hidden','false');if(t)t.setAttribute('aria-expanded','true');}" +
+      "function cl(){d.classList.remove('open');o.classList.remove('open');d.setAttribute('aria-hidden','true');if(t)t.setAttribute('aria-expanded','false');}" +
+      "if(t&&d&&o){t.addEventListener('click',op);o.addEventListener('click',cl);if(c)c.addEventListener('click',cl);" +
+      "d.addEventListener('click',function(e){if(e.target.tagName==='A')cl();});}})();</" + "script>";
+    el.append(html, { html: true });
   }
 }
 
@@ -405,6 +426,7 @@ export default {
         rewriter = rewriter
           .on("header nav ul", new NavInject(esLang))
           .on("header .nav", new MobileMenu())
+          .on("body", new MobileDrawer(esLang))
           .on("body", new AgeGate(esLang))
           .on("body", new TelegramFloat(esLang));
       }
