@@ -368,7 +368,7 @@ export default {
           .on("body", new AgeGate(esLang))
           .on("body", new TelegramFloat(esLang));
       }
-      if (path.startsWith("/slots") && env.SLOTSLAUNCH_TOKEN) {
+      if ((path.startsWith("/slots") || path.startsWith("/es/slots")) && env.SLOTSLAUNCH_TOKEN) {
         rewriter = rewriter.on("head", new SlotsToken(env.SLOTSLAUNCH_TOKEN));
       }
       if (geoRestricted) {
